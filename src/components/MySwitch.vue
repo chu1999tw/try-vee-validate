@@ -1,6 +1,5 @@
 <script setup>
-import { useAttrs, computed } from "vue";
-import { Field } from "vee-validate";
+import {useAttrs, computed} from 'vue'
 
 function ramdomId() {
   const mapping = [
@@ -13,55 +12,55 @@ function ramdomId() {
     7,
     8,
     9,
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
+  ]
 
-  let id = "";
+  let id = ''
   for (let i = 0; i < 8; i++) {
-    id += mapping[Math.floor(Math.random() * mapping.length)];
+    id += mapping[Math.floor(Math.random() * mapping.length)]
   }
-  return id;
+  return id
 }
 
-const id = ramdomId();
+const id = ramdomId()
 
-const props = defineProps(["modelValue"]);
-const emit = defineEmits(["update:modelValue"]);
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 defineOptions({
   inheritAttrs: false,
-});
+})
 
 function input(e) {
-  emit("update:modelValue", e.target.checked ? "1" : "0");
+  emit('update:modelValue', e.target.checked ? '1' : '0')
 }
 
-const isChecked = computed(() => (props.modelValue === "1" ? true : false));
+const isChecked = computed(() => (props.modelValue === '1' ? true : false))
 </script>
 
 <template>
@@ -73,6 +72,8 @@ const isChecked = computed(() => (props.modelValue === "1" ? true : false));
       :id="id"
       :checked="isChecked"
       @input="input"
+      :true-value="'1'"
+      :false-value="'0'"
     />
     <label class="switch" :for="id"></label>
   </div>
@@ -94,7 +95,7 @@ const isChecked = computed(() => (props.modelValue === "1" ? true : false));
   cursor: pointer;
 }
 .switch::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 1px;
   left: 2px;
@@ -102,15 +103,11 @@ const isChecked = computed(() => (props.modelValue === "1" ? true : false));
   height: 22px;
   background: #fafafa;
   border-radius: 50%;
-  transition:
-    left 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-    background 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 input:not([disabled]) + .switch:active::before {
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.28),
-    0 0 0 20px rgba(128, 128, 128, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(128, 128, 128, 0.1);
 }
 
 input:checked + .switch {
@@ -121,9 +118,7 @@ input:checked + .switch::before {
   background: #fff;
 }
 input:checked + .switch:active::before {
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.28),
-    0 0 0 20px rgba(0, 150, 136, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(0, 150, 136, 0.2);
 }
 
 input[disabled] + .switch {
