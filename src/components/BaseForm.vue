@@ -1,186 +1,165 @@
 <template>
-  <Form class="myForm" @submit="onSubmit(e)" :validation-schema="schema">
+  <form class="myForm" @submit.prevent="onSubmit">
     <h3>{{ title }}商品表單</h3>
 
     <!-- 表單輸入框 -->
     <div class="row">
       <label for="id" class="myLabel align-self-start" required>商品代號</label>
-      <Field name="id" v-slot="{ field, errorMessage }" v-model="formData.id">
-        <div class="d-flex flex-column w-100">
-          <input
-            v-bind="field"
-            :class="{ error: errorMessage }"
-            id="id"
-            type="text"
-            placeholder="請輸入商品代號"
-            :disabled="props.mode === 'view' || props.mode === 'edit'"
-          />
-          <span class="error">{{ errorMessage }}</span>
-        </div>
-      </Field>
+
+      <div class="d-flex flex-column w-100">
+        <input
+          id="id"
+          v-model="id"
+          v-bind="idAttrs"
+          :class="{error: errors.id}"
+          type="text"
+          placeholder="請輸入商品代號"
+          :disabled="props.mode === 'view' || props.mode === 'edit'"
+        />
+        <span class="errorText">{{ errors.id }}</span>
+      </div>
     </div>
 
     <div class="row">
-      <label for="name" class="myLabel align-self-start" required
-        >商品名稱</label
-      >
-      <Field
-        name="name"
-        v-slot="{ field, errorMessage }"
-        v-model="formData.name"
-      >
-        <div class="d-flex flex-column w-100">
-          <input
-            v-bind="field"
-            :class="{ error: errorMessage }"
-            id="name"
-            type="text"
-            placeholder="請輸入商品名稱"
-            :disabled="props.mode === 'view'"
-          />
-          <span class="error">{{ errorMessage }}</span>
-        </div>
-      </Field>
+      <label for="name" class="myLabel align-self-start" required>商品名稱</label>
+
+      <div class="d-flex flex-column w-100">
+        <input
+          id="name"
+          v-model="name"
+          v-bind="nameAttrs"
+          :class="{error: errors.name}"
+          type="text"
+          placeholder="請輸入商品名稱"
+          :disabled="props.mode === 'view'"
+        />
+        <span class="errorText">{{ errors.name }}</span>
+      </div>
     </div>
     <div class="row">
-      <label for="quantity" class="myLabel align-self-start" required
-        >數量</label
-      >
-      <Field
-        name="quantity"
-        v-slot="{ field, errorMessage }"
-        v-model="formData.quantity"
-      >
-        <div class="d-flex flex-column w-100">
-          <input
-            v-bind="field"
-            :class="{ error: errorMessage }"
-            id="quantity"
-            type="number"
-            placeholder="請輸入數量"
-            :disabled="props.mode === 'view'"
-          />
-          <span class="error">{{ errorMessage }}</span>
-        </div>
-      </Field>
+      <label for="quantity" class="myLabel align-self-start" required>數量</label>
+
+      <div class="d-flex flex-column w-100">
+        <input
+          id="quantity"
+          v-model="quantity"
+          v-bind="quantityAttrs"
+          :class="{error: errors.quantity}"
+          type="number"
+          placeholder="請輸入數量"
+          :disabled="props.mode === 'view'"
+        />
+        <span class="errorText">{{ errors.quantity }}</span>
+      </div>
     </div>
     <div class="row">
       <label for="price" class="myLabel align-self-start" required>售價</label>
-      <Field
-        name="price"
-        v-slot="{ field, errorMessage }"
-        v-model="formData.price"
-      >
-        <div class="d-flex flex-column w-100">
-          <input
-            v-bind="field"
-            :class="{ error: errorMessage }"
-            id="price"
-            type="text"
-            placeholder="請輸入售價"
-            :disabled="props.mode === 'view'"
-          />
-          <span class="error">{{ errorMessage }}</span>
-        </div>
-      </Field>
+
+      <div class="d-flex flex-column w-100">
+        <input
+          id="price"
+          v-model="price"
+          v-bind="priceAttrs"
+          :class="{error: errors.price}"
+          type="text"
+          placeholder="請輸入售價"
+          :disabled="props.mode === 'view'"
+        />
+        <span class="errorText">{{ errors.price }}</span>
+      </div>
     </div>
 
     <div class="row">
       <label for="price">特價標籤</label>
-      <Field name="promotion" v-slot="{ field }" v-model="formData.promotion">
-        <MySwitch v-bind="field" :disabled="props.mode === 'view'" />
-      </Field>
+
+      <MySwitch v-model="promotion" v-bind="promotionAttrs" :disabled="props.mode === 'view'" />
     </div>
 
     <div class="line"></div>
 
     <!-- 表單按鈕區 -->
     <div class="button-area">
-      <slot name="buttons"></slot>
+      <slot name="buttons" v-bind="meta"> </slot>
     </div>
-
-    <slot name="another"></slot>
-    <pre>formData {{ formData }}</pre>
-  </Form>
+  </form>
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import { Field, Form, useForm } from "vee-validate";
-import MySwitch from "./MySwitch.vue";
-import * as yup from "yup";
+import {computed, watch} from 'vue'
+import {useForm} from 'vee-validate'
+import MySwitch from './MySwitch.vue'
+import * as yup from 'yup'
 
-const { handleSubmit, values } = useForm({
-  initialValues: {
-    id: "",
-    name: "",
-    quantity: 0,
-    price: "",
-    promotion: "1",
-  },
-});
+// 驗證邏輯：
+const schema = yup.object({
+  id: yup.string().required('商品代號為必填'),
+  name: yup.string().required('商品名稱為必填'),
+  quantity: yup.number().required('商品數量為必填').positive('必須為正整數').integer(),
+  price: yup.string().required('商品價格為必填'),
+  promotion: yup.string(),
+})
 
+// 表單模式 新增 || 編輯 || 查看
 const props = defineProps({
   // 表單類型
   mode: {
     type: String,
     required: true,
   },
-
-  // 定義初始資料
   initData: {
     type: Object,
     required: false,
-    default: () => {
-      return { id: "", name: "", quantity: 0, price: "", promotion: "1" };
-    },
   },
-});
+})
 
-const emit = defineEmits(["submit"]);
+const {defineField, errors, meta, handleSubmit, setValues} = useForm({
+  validationSchema: schema,
+  initialValues: {
+    id: '',
+    name: '',
+    quantity: 0,
+    price: '',
+    promotion: '0',
+  },
+})
 
-// 表單定義的資料
-const formData = ref({ ...props.initData });
+const [id, idAttrs] = defineField('id')
+const [name, nameAttrs] = defineField('name')
+const [quantity, quantityAttrs] = defineField('quantity')
+const [price, priceAttrs] = defineField('price')
+const [promotion, promotionAttrs] = defineField('promotion')
+
+const emit = defineEmits(['submit', 'get-form-info'])
 
 // 表單顯示的標題
 const title = computed(() => {
   const map = {
-    create: "新增",
-    edit: "編輯",
-    view: "查看",
-  };
-
-  if (!props.mode) {
-    return "";
+    create: '新增',
+    edit: '編輯',
+    view: '查看',
   }
 
-  return map[props.mode];
-});
+  if (!props.mode) {
+    return ''
+  }
+
+  return map[props.mode]
+})
+
+// 監聽父層組件資料變化
+watch(
+  () => props.initData,
+  (newFormData) => {
+    setValues(newFormData)
+  },
+  {deep: true}
+)
 
 // 表單送出事件
-const onSubmit = handleSubmit((values, actions) => {
-  console.log(values, actions);
-  // emit("submit", value);
-});
-
-// watch(
-//   formData,
-//   () => {
-//     // console.log({ formData });
-//   },
-//   {
-//     deep: true,
-//   },
-// );
-
-// 驗證邏輯：
-const schema = yup.object().shape({
-  id: yup.string().required("商品代號為必填"),
-  name: yup.string().required("商品名稱為必填"),
-  quantity: yup.number().required("商品數量為必填").positive().integer(),
-  price: yup.string().required("商品價格為必填"),
-  promotion: yup.string(),
-});
+const onSubmit = handleSubmit((values) => {
+  // 按下送出按鈕時，將表單資料帶給父組件
+  emit('submit', values)
+})
 </script>
 
 <style scoped>
@@ -212,7 +191,7 @@ label {
 
   &[required] {
     &:after {
-      content: "*";
+      content: '*';
       color: red;
       font-size: 12px;
     }
@@ -230,8 +209,11 @@ input {
   border-radius: 4px;
   height: 40px;
 
+  &:focus {
+    border: 2px solid #7799cc;
+  }
   &.error {
-    border: 1px solid red;
+    border: 1px solid red !important;
   }
 
   &[disabled] {
@@ -269,6 +251,11 @@ input {
 
 .error {
   font-size: 12px;
+}
+
+.errorText {
   color: red;
+  font-size: 12px;
+  margin-top: 4px;
 }
 </style>
