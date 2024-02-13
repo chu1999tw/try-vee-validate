@@ -7,23 +7,23 @@
 </template>
 
 <script setup>
-import { useAttrs } from "vue";
+import {useAttrs} from 'vue'
 
-const attrs = useAttrs();
+const attrs = useAttrs()
 </script>
 
 <style scoped lang="scss">
 // 按鈕主題色
 @function themeColor($theme) {
-  @if ($theme == "primary") {
+  @if ($theme == 'primary') {
     @return #057afa;
-  } @else if($theme == "info") {
+  } @else if($theme == 'info') {
     @return #ccc;
   }
 }
 // 按鈕字體顏色
 @function fontColor($theme) {
-  @if ($theme == "primary") {
+  @if ($theme == 'primary') {
     @return #fff;
   } @else {
     @return #333;
@@ -56,34 +56,48 @@ const attrs = useAttrs();
 
   &:focus {
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       border-radius: 8px;
       width: calc(100% + 4px);
       height: calc(100% + 4px);
     }
   }
+
+  /* disabled 樣式*/
+  &:disabled {
+    cursor: not-allowed !important;
+    background: #999;
+
+    &:hover {
+      filter: unset;
+    }
+
+    &:active {
+      filter: unset;
+    }
+  }
 }
 
 button {
   @extend %btn;
-  background-color: themeColor("primary");
-  color: fontColor("primary");
+  background-color: themeColor('primary');
+  color: fontColor('primary');
 
   &:focus {
     &:before {
-      border: 2px solid themeColor("primary");
+      border: 2px solid themeColor('primary');
     }
   }
 }
 
 button.info {
   @extend %btn;
-  background-color: themeColor("info");
-  color: fontColor("info");
+  background-color: themeColor('info');
+  color: fontColor('info');
   &:focus {
     &:before {
-      border: 2px solid themeColor("info");
+      border: 2px solid themeColor('info');
     }
   }
 }
