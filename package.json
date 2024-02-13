@@ -12,6 +12,7 @@
     "@unocss/preset-attributify": "^0.58.3",
     "@unocss/preset-icons": "^0.58.3",
     "axios": "^1.6.5",
+    "pinia": "^2.1.7",
     "sass": "^1.70.0",
     "unocss": "^0.58.3",
     "vee-validate": "^4.12.4",
