@@ -1,5 +1,5 @@
 <script setup>
-import {useAttrs, computed} from 'vue'
+import {computed} from 'vue'
 
 function ramdomId() {
   const mapping = [
@@ -117,11 +117,14 @@ input:checked + .switch::before {
   left: 27px;
   background: #fff;
 }
-input:checked + .switch:active::before {
+input:checked:not(:disabled) + .switch:active::before {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(0, 150, 136, 0.2);
 }
 
 input[disabled] + .switch {
   cursor: not-allowed !important;
+}
+input[disabled]:checked + .switch {
+  background: #999;
 }
 </style>
